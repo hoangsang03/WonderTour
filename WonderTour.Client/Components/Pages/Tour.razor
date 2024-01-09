@@ -1,0 +1,112 @@
+﻿@page "/tour"
+@attribute [StreamRendering]
+@inject ILogger<Tour> Logger
+
+<PageTitle>Tour</PageTitle>
+
+<h1>Tour</h1>
+
+@if (Tours == null || Tours.Count == 0)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>StartDate</th>
+                <th>EndDate</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tour in Tours)
+            {
+                <tr>
+                    <td>@tour.Id</td>
+                    <td>@tour.Name</td>
+                    <td>@tour.Description</td>
+                    <td>@tour.Price</td>
+                    <td>@tour.StartDate</td>
+                    <td>@tour.EndDate</td>
+                    <td>
+                        @if (!tour.IsAdded)
+                        {
+                            <button @onclick="@(e => AddTour(tour))">Add</button>
+                        }
+                        else
+                        {
+                            <button @onclick="@(e => RemoveTour(tour))">Added</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<TourDto> Tours = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1);
+        TourDto tour1 = new()
+            {
+                Id = 1,
+                Name = "tour1",
+                Description = "",
+                Price = 1_000_000,
+                StartDate = new DateTime(2024, 9, 12),
+                EndDate = new DateTime(2024, 9, 15)
+            };
+        TourDto tour2 = new()
+            {
+                Id = 2,
+                Name = "tour2",
+                Description = "",
+                Price = 1_000_000,
+                StartDate = new DateTime(2024, 9, 12),
+                EndDate = new DateTime(2024, 9, 15)
+            };
+        TourDto tour3 = new()
+            {
+                Id = 3,
+                Name = "tour3",
+                Description = "",
+                Price = 1_000_000,
+                StartDate = new DateTime(2024, 9, 12),
+                EndDate = new DateTime(2024, 9, 15)
+            };
+        TourDto tour4 = new()
+            {
+                Id = 4,
+                Name = "tour4",
+                Description = "",
+                Price = 1_000_000,
+                StartDate = new DateTime(2024, 9, 12),
+                EndDate = new DateTime(2024, 9, 15)
+            };
+
+        Tours.AddRange(new List<TourDto> { tour1, tour2, tour3, tour4 });
+
+    }
+
+    private void AddTour(TourDto tour)
+    {
+        Logger.LogInformation($"Add tour {tour.Id}");
+        tour.IsAdded = true;
+    }
+
+    private void RemoveTour(TourDto tour)
+    {
+        Logger.LogInformation($"remove tour {tour.Id}");
+        tour.IsAdded = false;
+        Tours.Remove(tour);
+    }
+}

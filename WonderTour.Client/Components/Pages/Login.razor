@@ -1,0 +1,43 @@
+﻿@page "/login"
+@inject NavigationManager Navigation
+@inject ILogger<Login> Logger
+
+<PageTitle>Login</PageTitle>
+
+<h1>Đăng Nhập</h1>
+
+<EditForm Model="@Model" OnValidSubmit="@Submit" FormName="Login">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div>
+        <label>
+            Email:
+            <InputText @bind-Value="Model!.Email" />
+        </label>
+    </div>
+    <div>
+        <label>
+            Password:
+            <InputText @bind-Value="Model!.Password" />
+        </label>
+    </div>
+    <div>
+        <button type="submit">Login</button>
+    </div>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private LoginDto Model { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Model ??= new();
+    }
+
+    private void Submit()
+    {
+        Logger.LogInformation($"Email: {Model.Email}, Password: {Model.Password}");
+        Navigation.NavigateTo("weather");
+    }
+}
